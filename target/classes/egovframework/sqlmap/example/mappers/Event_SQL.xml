@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.event.service.impl.EventMapper">
+	<select id="selectEventList" parameterType="eventPagingVO" resultType="egovMap">
+		SELECT aa.*
+		FROM 
+			(SELECT a.*, FLOOR((ROWNUM - 1)/ #{rows} + 1 ) pageNumber
+			FROM
+				(SELECT 
+					EV_SEQ, 
+					EV_TTL, 
+					EV_WTR_ID, 
+					EV_HIT, 
+					EV_CRT_DATE, 
+					EV_WTR_NM
+				FROM 
+					TAB_EVENT
+				WHERE 
+					(EV_STA_DATE IS NULL AND EV_END_DATE IS NULL AND EV_DEL = 'N') 
+				OR 
+					<![CDATA[
+					(SYSDATE >= EV_STA_DATE AND EV_END_DATE >= SYSDATE AND EV_DEL = 'N')
+					]]>
+				ORDER BY EV_SEQ) a
+			ORDER BY a.EV_SEQ) aa
+		WHERE aa.pageNumber = #{page} 
+		ORDER BY aa.EV_SEQ
+	</select>
+	
+	<select id="selectPagingListCnt" parameterType="eventPagingVO" resultType="egovMap">
+		SELECT count(*) TOTAL_TOT_CNT, CEIL(count(*)/#{rows}) TOTAL_PAGE
+		FROM TAB_EVENT
+		WHERE 
+			(EV_STA_DATE IS NULL AND EV_END_DATE IS NULL AND EV_DEL = 'N') 
+		OR 
+			<![CDATA[
+			(SYSDATE + 1 >= EV_STA_DATE AND EV_END_DATE >= SYSDATE AND EV_DEL = 'N')
+			]]>
+		ORDER BY EV_SEQ ASC
+	</select>
+	
+	<select id="selectEventDetailList" parameterType="eventVO" resultType="egovMap">
+		SELECT *
+		FROM TAB_EVENT
+		WHERE EV_SEQ = #{evSeq}
+	</select>
+</mapper>

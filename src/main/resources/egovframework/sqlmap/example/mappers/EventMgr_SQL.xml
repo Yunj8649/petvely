@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.eventMgr.service.impl.EventMgrMapper">
+	<select id="selectEventMgrList" parameterType="eventPagingVO" resultType="egovMap">
+		SELECT aa.*
+		FROM 
+			(SELECT a.*, FLOOR((ROWNUM - 1)/ #{rows} + 1 ) pageNumber
+			FROM
+				(SELECT 
+					EV_SEQ, 
+					EV_TTL, 
+					EV_WTR_ID, 
+					EV_HIT, 
+					EV_CRT_DATE, 
+					EV_WTR_NM, 
+					EV_DEL
+				FROM 
+					TAB_EVENT
+				<where>
+					<if test='evDel != "all" and evDel != null and evDel != ""'>
+					EV_DEL = #{evDel}
+					</if>
+				</where>
+				ORDER BY EV_SEQ) a
+			ORDER BY a.EV_SEQ) aa
+		WHERE aa.pageNumber = #{page} 
+		
+		ORDER BY aa.EV_SEQ
+	</select>
+	
+	<select id="selectPagingListCnt" parameterType="eventPagingVO" resultType="egovMap">
+		SELECT count(*) TOTAL_TOT_CNT, CEIL(count(*)/#{rows}) TOTAL_PAGE
+		FROM TAB_EVENT
+		<if test='evDel != "all" and evDel != null and evDel != ""'>
+		WHERE EV_DEL = #{evDel}
+		</if>
+		ORDER BY EV_SEQ ASC
+	</select>
+	
+	<update id="deleteEventList" parameterType="String">
+		UPDATE	TAB_EVENT
+		SET		EV_DEL = 'Y'
+		WHERE	EV_SEQ = #{_parameter}
+	</update>
+
+	<update id="reloadEventList" parameterType="String">
+		UPDATE	TAB_EVENT
+		SET		EV_DEL = 'N'
+		WHERE	EV_SEQ = #{_parameter}
+	</update>
+	
+	<insert id="insertEventContent" parameterType="eventVO">
+		INSERT INTO TAB_EVENT
+			(EV_SEQ, 
+			EV_TTL, 
+			EV_CTT, 
+			EV_WTR_ID, 
+			EV_FLE, 
+			<if test='evStaDate != null and evStaDate != ""'>
+			EV_STA_DATE, 
+			EV_END_DATE, 
+			</if>
+			EV_WTR_NM)
+		VALUES
+			(EV_SEQ.nextval,
+			#{evTtl}, 
+			#{evCtt}, 
+			#{evWtrId}, 
+			#{evFle}, 
+			<if test='evStaDate != null and evStaDate != ""'>
+			TO_DATE(#{evStaDate}, 'YYYY-MM-DD HH24:MI:SS'), 
+			TO_DATE(#{evEndDate}, 'YYYY-MM-DD HH24:MI:SS'), 
+			</if>
+			#{evWtrNm})
+	</insert>
+	
+	<select id="selectEventListevSeq" parameterType="String" resultType="egovMap">
+		<if test='_parameter != null and _parameter != ""'>
+		SELECT * 
+		FROM TAB_EVENT 
+		WHERE EV_SEQ = #{_parameter}
+		</if>
+	</select>
+	
+	<update id="updateEventContent" parameterType="eventVO">
+		UPDATE TAB_EVENT
+		SET EV_TTL = #{evTtl}, 
+			EV_CTT = #{evCtt}, 
+			EV_STA_DATE = TO_DATE(#{evStaDate}, 'YYYY-MM-DD HH24:MI:SS'), 
+			EV_END_DATE = TO_DATE(#{evEndDate}, 'YYYY-MM-DD HH24:MI:SS'), 
+			EV_FLE = #{evFle}
+		WHERE EV_SEQ = #{evSeq}
+	</update>
+</mapper>

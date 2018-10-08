@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.product.service.impl.ProductMapper">
+	
+	<select id="selectJqgridList" parameterType="productMgrVO"
+	resultType="egovMap">
+		SELECT b.*
+			FROM (
+				SELECT a.*,
+					ROWNUM rnum,
+					FLOOR((ROWNUM - 1) /#{rows} + 1) pageNumber
+				 FROM (
+					SELECT
+					    C.PR_CD,
+					    C.PR_NM,
+					    C.BRD_NM,
+					    CT_TAB.CT_CD,
+					    CT_TAB.CT_NM,
+					    CT_TAB.SUB_CT_CD,
+					    CT_TAB.SUB_CT_NM,
+					    C.PR_CLR,
+					    C.PR_OPT,
+					    C.PR_PRC,
+					    C.PR_CRT_DATE,
+					    C.PR_CNT_STO,
+					    C.PR_CNT_SEL
+					FROM
+					    (SELECT DISTINCT CT_CD, CT_NM, SUB_CT_CD, SUB_CT_NM FROM TAB_CATEGORY
+					    <where>
+					    	<if test='selectedCategory != null and selectedCategory != "none" and selectedCategory != ""'>
+						    	 CT_CD = #{selectedCategory}
+						    	 <if test='selectedSubCategory != null and selectedSubCategory != "none" and selectedCategory != ""'>
+						    	 	AND SUB_CT_CD = #{selectedSubCategory}
+						    	 </if>
+						    </if>
+					    </where>
+					    ) CT_TAB,
+					    TAB_PROD C
+					WHERE 
+						C.CT_CD = CT_TAB.CT_CD AND C.SUB_CT_CD = CT_TAB.SUB_CT_CD
+					<choose>	<!-- 상품코드, 상품가격, 카테고리코드 -->
+						<when test='sidx == "ctCd"'>
+							<if test='sord == "asc"'>
+								ORDER BY CT_TAB.CT_CD ASC
+							</if>	
+							<if test='sord == "desc"'>
+								ORDER BY CT_TAB.CT_CD DESC
+							</if>	
+						</when>
+						<when test='sidx == "prPrc"'>
+							<if test='sord == "asc"'>
+								ORDER BY C.PR_PRC ASC
+							</if>	
+							<if test='sord == "desc"'>
+								ORDER BY C.PR_PRC DESC
+							</if>	
+						</when>
+						<when test='sidx == "prCd"'>
+							<if test='sord == "asc"'>
+								ORDER BY C.PR_CD ASC
+							</if>	
+							<if test='sord == "desc"'>
+								ORDER BY C.PR_CD DESC
+							</if>	
+						</when>
+						<otherwise>
+						</otherwise>
+					</choose>
+				) a
+			) b
+			WHERE b.pageNumber = #{page}
+	</select>
+
+	<select id="selectJqgridListCnt" parameterType="productMgrVO"
+		resultType="egovMap">
+		
+		SELECT count(*) totalTotCnt
+			, CEIL(count(*) / #{rows}) totalPage
+		FROM TAB_PROD
+		<where>
+			<if test="selectedCategory != 'none' and selectedCategory != ''">
+				ct_cd = #{selectedCategory}
+				<if test="selectedSubCategory != 'none' and selectedSubCategory != ''">
+					and sub_ct_cd = #{selectedSubCategory}
+				</if>
+			</if>
+		</where>
+		ORDER BY pr_cd ASC
+	</select>
+	
+	<select id="selectCategoryList" resultType="egovMap">
+      SELECT CT_CD, CT_NM
+      FROM TAB_CATEGORY
+      GROUP BY CT_CD, CT_NM
+      ORDER BY CT_CD ASC
+   </select>
+   
+	<select id="prdMgrChildBoxList" resultType="egovMap">
+      SELECT SUB_CT_CD, SUB_CT_NM
+      FROM TAB_CATEGORY
+      WHERE CT_CD = #{_parameter}
+      GROUP BY SUB_CT_CD, SUB_CT_NM
+      ORDER BY SUB_CT_CD ASC
+   </select>
+   
+   <delete id="deleteJqgridList" parameterType="map">
+ 		DELETE FROM TAB_PROD WHERE PR_CD = #{prCd}
+   </delete>
+	
+	<!-- 상품 추가 -->
+	<insert id="insertProduct" parameterType="prdVO">
+	INSERT INTO TAB_PROD
+		(PR_CD,
+		PR_NM,
+		BRD_NM,
+		CT_CD,
+		SUB_CT_CD,
+		PR_CLR,
+		PR_OPT,
+		PR_PRC,
+<!-- 		PR_STA_DATE, -->
+<!-- 		PR_END_DATE, -->
+		PR_CNT_STO,
+		PR_IMG_1,
+		PR_IMG_2,
+		PR_DES_1,
+		PR_DES_2
+		)
+	VALUES
+		(PRD_SEQ.nextval,
+		#{prNm},
+		#{brdNm},
+		#{ctCd},
+		#{subCtCd},
+		#{prClr},
+		#{prOpt},
+		#{prPrc},
+<!-- 		#{prStaDate}, -->
+<!-- 		#{prEndDate}, -->
+		#{prCntSto},
+		#{prImg1},
+		#{prImg2},
+		#{prDes1},
+		#{prDes2}
+		)
+	</insert>
+	
+	<select id="selectProductList" parameterType="prdVO" resultType="egovMap">
+		SELECT *
+		FROM TAB_PROD
+		WHERE PR_CD = #{prCd}
+	</select>
+	
+<!-- 	<update id="updateProduct">
+		UPDATE TAB_PROD
+		SET #{prNm},
+			#{brdNm},
+			#{ctCd},
+			#{subCtCd},
+			#{prClr},
+			#{prOpt},
+			#{prPrc},
+	 		#{prStaDate}, 
+	 		#{prEndDate}, 
+			#{prCntSto},
+			#{prImg1},
+			#{prImg2},
+			#{prDes1},
+			#{prDes2}
+		WHERE prCd=#{prCd}
+	</update> -->
+	
+	<select id="selectCtList" resultType="egovMap">
+		SELECT CT_CD, CT_NM
+		FROM TAB_CATEGORY
+		GROUP BY CT_CD, CT_NM
+		ORDER BY CT_CD ASC
+	</select>
+	
+	<select id="selectSubCtList" parameterType="String" resultType="egovMap">
+		SELECT C.SUB_CT_CD, C.SUB_CT_NM
+		FROM TAB_CATEGORY C
+		WHERE 
+			<if test='_parameter != null and _parameter != "" '>
+				C.CT_CD = #{_parameter}
+			</if>
+		ORDER BY C.CT_CD ASC
+	</select>
+	
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.memberMgr.service.impl.MemberMgrMapper">
+
+	<select id="selectJqgridList" parameterType="memberMgrVO"
+		resultType="egovMap">
+		SELECT b.*
+			FROM (
+				SELECT a.*,
+					ROWNUM rnum,
+					FLOOR((ROWNUM - 1) /#{rows} + 1) pageNumber
+				 FROM (
+					SELECT
+						ACC.SEQ_NO,
+						ACC.ACC_ID,
+						ACC.ACC_NM,
+						ACC.ACC_EM,
+						ACC.ACC_PN_1,
+						ACC.ACC_PN_2,
+						ACC.ACC_PN_3,
+						ACC.ACC_CR_DATE,
+						ACC.ACC_DEL,
+						ACC.ACC_GRP
+					 FROM TAB_ACCOUNT ACC
+					 ORDER BY ACC_CR_DATE DESC
+<!-- 					WHERE 
+					<choose>	
+						<when test='sidx == "ctCd"'>
+							<if test='sord == "asc"'>
+								ORDER BY CT_TAB.CT_CD ASC
+							</if>	
+							<if test='sord == "desc"'>
+								ORDER BY CT_TAB.CT_CD DESC
+							</if>	
+						</when>
+						<otherwise>
+						</otherwise>
+					</choose> -->
+				) a
+			) b
+			WHERE b.pageNumber = #{page}
+	</select>
+
+	<select id="selectJqgridListCnt" parameterType="memberMgrVO"
+		resultType="egovMap">
+		
+		SELECT count(*) totalTotCnt
+			, CEIL(count(*) / #{rows}) totalPage
+		FROM TAB_ACCOUNT
+<!-- 		<where>
+			<if test="selectedCategory != 'none' and selectedCategory != ''">
+				ct_cd = #{selectedCategory}
+				<if test="selectedSubCategory != 'none' and selectedSubCategory != ''">
+					and sub_ct_cd = #{selectedSubCategory}
+				</if>
+			</if>
+		</where> -->
+	</select>
+	
+	<select id="getSelSeqNoData" parameterType="String"
+		resultType="egovMap">
+	
+	SELECT	*
+	FROM	TAB_ACCOUNT
+	WHERE	SEQ_NO = #{_parameter}	
+	
+	</select>
+	
+	
+	<update id="leaveMember" parameterType="map">
+		UPDATE	TAB_ACCOUNT
+		SET		ACC_DEL = 'Y'
+		WHERE	SEQ_NO = #{seqNo}
+	</update>
+	
+	<update id="restoreMember" parameterType="map">
+		UPDATE	TAB_ACCOUNT
+		SET		ACC_DEL = 'N'
+		WHERE	SEQ_NO = #{seqNo}
+	</update>
+	
+	<update id="advMember" parameterType="map">
+		UPDATE	TAB_ACCOUNT
+		SET		ACC_GRP = #{accGrp}
+		WHERE	SEQ_NO = #{seqNo}
+	</update>
+	
+	<update id="modifyMember" parameterType="map">
+		UPDATE	TAB_ACCOUNT
+		SET		ACC_PW_NEW = #{accPwNew},
+				ACC_PW_OLD = #{accPwOld},
+				ACC_EM	   = #{accEm},
+				ACC_PN_1   = #{accPn1},
+				ACC_PN_2   = #{accPn2},
+				ACC_PN_3   = #{accPn3},
+				ACC_IM_SMS = #{accImSms},
+				ACC_IM_EM  = #{accImEm}
+		WHERE	SEQ_NO = #{seqNo}
+	</update>
+	
+<!-- 	<select id="selectCategoryList" resultType="egovMap">
+      SELECT CT_CD, CT_NM
+      FROM TAB_CATEGORY
+      GROUP BY CT_CD, CT_NM
+      ORDER BY CT_CD ASC
+   </select>
+   
+	<select id="prdMgrChildBoxList" resultType="egovMap">
+      SELECT SUB_CT_CD, SUB_CT_NM
+      FROM TAB_CATEGORY
+      WHERE CT_CD = #{_parameter}
+      GROUP BY SUB_CT_CD, SUB_CT_NM
+      ORDER BY SUB_CT_CD ASC
+   </select>
+   
+ -->
+ 
+</mapper>

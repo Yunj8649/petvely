@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+.noticeBoard {
+	background : rgba(243, 141, 163, 1);
+	color: white;
+	padding : 2px;
+	border-radius: 3px;
+}
+
+.eventBoard {
+	background :red;
+	color: white;
+	padding : 2px;
+	border-radius: 3px;
+}
+
+.boardTitle , .boardWriter, .boardDate ,.boardProduct{
+	padding-left : 10px;
+}
+
+.noticeKKO {
+	text-align : left;
+}
+
+
+.notice tbody tr th , .review tbody tr th, .event tbody tr th{
+	text-align : center;
+}
+.boardContent {
+	float : left;
+}

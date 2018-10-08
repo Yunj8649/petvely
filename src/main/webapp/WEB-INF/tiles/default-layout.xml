@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+ 
+<tiles-definitions>
+	<definition name="layouts-tiles" template="/WEB-INF/jsp/egovframework/example/cmmn/default-layouts.jsp">
+	  	<put-attribute name="header"    	value="/WEB-INF/jsp/egovframework/example/cmmn/default-header.jsp" />
+	  	<put-attribute name="nav"    		value="/WEB-INF/jsp/egovframework/example/cmmn/default-nav.jsp" />
+	  	<put-attribute name="content"   	value="" />
+	  	<put-attribute name="footer"    	value="/WEB-INF/jsp/egovframework/example/cmmn/default-footer.jsp" />
+	  	<put-attribute name="wing"  	  	value="/WEB-INF/jsp/egovframework/example/cmmn/wingBanner.jsp" />
+	</definition>
+	<definition name="*/*.tiles" extends="layouts-tiles">
+	  	<put-attribute name="content"   value="/WEB-INF/jsp/egovframework/example/{1}/{2}.jsp" />
+	</definition>
+	
+	<definition name="admin-tiles" template="/WEB-INF/jsp/egovframework/example/admin/cmmn/layout.jsp">
+		<put-attribute name="header"    	value="/WEB-INF/jsp/egovframework/example/admin/cmmn/header.jsp" />
+	  	<put-attribute name="nav"    		value="/WEB-INF/jsp/egovframework/example/admin/cmmn/nav.jsp" />
+	  	<put-attribute name="left"   		value="/WEB-INF/jsp/egovframework/example/admin/cmmn/left.jsp" />
+	  	<put-attribute name="content"    	value="" />
+	</definition>
+	<definition name="*/*/*.tiles" extends="admin-tiles">
+	  	<put-attribute name="content"   value="/WEB-INF/jsp/egovframework/example/{1}/{2}/{3}.jsp" />
+	</definition>
+</tiles-definitions>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.detail.service.impl.DetailMapper">
+	
+	<select id="selectProduct" resultType="egovMap" parameterType="prdVO">
+		SELECT  PR_CD,
+				PR_NM,
+				BRD_NM,
+				CT_CD,
+				SUB_CT_CD,
+				PR_CLR,
+				PR_OPT,
+				PR_PRC,
+				PR_IMG_1,
+				PR_IMG_2,
+				PR_DES_1
+		FROM TAB_PROD
+		WHERE 1=1
+		<if test='prCd != null and prCd !=""'>
+			and PR_CD = #{prCd}
+		</if>
+			
+	</select>
+	
+	<select id="selectCtg" resultType="egovMap" parameterType="String">
+		SELECT 
+			TC.CT_CD CT_CD,
+			TC.CT_NM CT_NM,
+			TC.SUB_CT_CD SUB_CT_CD,
+			TC.SUB_CT_NM SUB_CT_NM
+		FROM  TAB_CATEGORY TC, TAB_PROD TP
+		WHERE 1=1 
+			AND TP.PR_CD = #{prCd}
+			AND TC.CT_CD = TP.CT_CD
+			AND TC.SUB_CT_CD = TP.SUB_CT_CD
+	</select>
+</mapper>
