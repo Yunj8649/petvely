@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.notice.service.impl.NoticeMapper">
+	<select id="selectPagingList" parameterType="noticePgingVO" resultType="egovMap">
+		SELECT aa.*
+		FROM 
+			(SELECT a.*, FLOOR((ROWNUM - 1)/ #{rows} + 1 ) pageNumber
+			FROM
+				(SELECT 
+					NT_SEQ, 
+					NT_TTL, 
+					NT_WTR_NM, 
+					NT_CRT_DATE, 
+					NT_HIT, 
+					NT_STA_DATE, 
+					NT_END_DATE
+				FROM 
+					TAB_NOTICE
+				WHERE 
+					(NT_STA_DATE IS NULL AND NT_END_DATE IS NULL AND NT_DEL = 'N') 
+				OR 
+					<![CDATA[
+					(SYSDATE >= NT_STA_DATE AND NT_END_DATE >= SYSDATE AND NT_DEL = 'N')
+					]]>
+				ORDER BY NT_SEQ) a
+			ORDER BY a.NT_SEQ) aa
+		WHERE aa.pageNumber = #{page} 
+		ORDER BY aa.NT_SEQ
+	</select>
+	
+	<select id="noticeDetailList" parameterType="noticeVO" resultType="egovMap">
+		SELECT * FROM TAB_NOTICE
+		WHERE
+		<if test='ntSeq != null and ntSeq != ""'>
+			NT_SEQ = #{ntSeq}
+		</if>
+	</select>
+	
+	<update id="updateHit" parameterType="noticeVO">
+		<if test='ntSeq != null and ntSeq != ""'>
+		UPDATE TAB_NOTICE
+		SET NT_HIT = #{ntHit}
+		WHERE NT_SEQ = #{ntSeq}
+		</if>
+	</update>
+	
+	<select id="selectNoticeHit" parameterType="noticeVO" resultType="java.lang.Integer">
+		<if test='ntSeq != null and ntSeq != ""'>
+		SELECT NT_HIT FROM TAB_NOTICE WHERE NT_SEQ = #{ntSeq}
+		</if>
+	</select>
+	
+	<select id="selectPagingListCnt" parameterType="noticePgingVO" resultType="egovMap">
+		SELECT count(*) TOTAL_TOT_CNT, CEIL(count(*)/#{rows}) TOTAL_PAGE
+		FROM TAB_NOTICE
+		WHERE 
+			(NT_STA_DATE IS NULL AND NT_END_DATE IS NULL AND NT_DEL = 'N') 
+		OR 
+			<![CDATA[
+			(SYSDATE >= NT_STA_DATE AND NT_END_DATE >= SYSDATE AND NT_DEL = 'N')
+			]]>
+		ORDER BY NT_SEQ ASC
+	</select>
+	
+
+</mapper>

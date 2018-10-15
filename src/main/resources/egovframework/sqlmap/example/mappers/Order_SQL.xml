@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.order.service.impl.OrderMapper">
+  
+<!-- 	<select id="selectProductList" resultType="prdVO"> -->
+<!-- 		SELECT tc.* -->
+<!-- 		FROM TAB_Order tc, TAB_PROD tp -->
+<!-- 		WHERE tc.PR_CD = tp.PR_CD and  -->
+<!-- 			  tc.PR_CD = #{prCd} -->
+<!-- 	</select> -->
+	
+	 <insert id="insertOrder" parameterType="orderVO">
+        INSERT INTO TAB_ORDER(
+            PR_CD, OR_CD, ACC_ID, OR_QTY, OR_OPT, OR_CLR
+        ) VALUES (
+           #{prCd},Order_SEQ.NEXTVAL,#{accId},#{orQty},#{orOpt},#{orClr}
+        )
+    </insert>
+    
+    <!-- 2. 장바구니 목록 -->
+    <select id="listOrder" resultType="egovMap">
+        SELECT
+            c.OR_CD ,
+            c.ACC_ID,
+            m.ACC_NM, 
+            c.PR_CD,
+            p.PR_NM, 
+            c.OR_QTY, 
+            p.PR_PRC,
+            p.BRD_NM,
+            p.PR_IMG_1,
+            (p.PR_PRC *  c.OR_QTY) money
+        FROM
+            TAB_ACCOUNT m, TAB_PROD p, TAB_ORDER c
+        WHERE m.ACC_ID = c.ACC_ID
+            AND p.PR_CD = c.PR_CD
+            AND c.ACC_ID = #{accId}
+        ORDER BY
+            c.OR_CD
+    </select>
+    
+    <!-- 3. 장바구니 전체 금액 -->
+    <select id="sumOrder" resultType="int">
+        SELECT NVL(SUM(p.PR_PRC * c.OR_QTY), 0) money
+        FROM TAB_ORDER c, TAB_PROD p
+        WHERE c.PR_CD = p.PR_CD AND c.ACC_ID = #{accId}
+    </select>
+    
+    <!-- 4. 장바구니 수정 -->
+    <update id="modifyOrder">
+        UPDATE TAB_ORDER    
+        SET OR_QTY = #{orQty} 
+        WHERE ACC_ID= #{accId} 
+        AND PR_CD = #{prCd}
+    </update>
+    
+    <!-- 5. 장바구니 삭제 -->
+    <delete id="deleteOrder">
+        DELETE FROM TAB_ORDER
+        WHERE OR_CD = #{orCd}
+    </delete>
+    <!-- 6. 장바구니에 동일한 상품 레코드 확인 -->
+    <select id="selectOne" resultType="int">
+        SELECT COUNT(*)
+        FROM TAB_ORDER
+        WHERE ACC_ID= #{accId} 
+        AND PR_CD = #{prCd}
+    </select>
+    
+    <!-- 7. 장바구니에 동일한 상품이 존재하면 수정 -->
+    <update id="updateOrder">
+        UPDATE TAB_ORDER
+        SET OR_QTY = OR_QTY + #{orQty} 
+        WHERE ACC_ID= #{accId} 
+        AND PR_CD = #{prCd}
+    </update>
+</mapper>

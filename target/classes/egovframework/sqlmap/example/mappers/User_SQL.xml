@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.user.service.impl.UserMapper">
+	<insert id="user_register" parameterType="accVO">
+	INSERT INTO TAB_ACCOUNT
+		(SEQ_NO,
+		ACC_ID,
+		ACC_NM,
+		ACC_PW_NEW,
+		ACC_PW_OLD,
+		ACC_EM,
+		ACC_PN_1, 
+		ACC_PN_2,
+		ACC_PN_3,
+		ACC_AG_1,
+		ACC_AG_2,
+		ACC_AG_3,
+		ACC_IM_SMS,
+		ACC_IM_EM
+		)
+	VALUES
+		(ACCOUNT_SEQ.nextval,
+		#{accId},
+		#{accNm},
+		#{accPwNew},
+		#{accPwOld},
+		#{accEm},
+		#{accPn1},
+		#{accPn2},
+		#{accPn3},
+		#{accAg1},
+		#{accAg2},
+		#{accAg3},
+		#{accImSms},
+		#{accImEm}
+		)
+	</insert>
+	
+	<select id="id_check" parameterType="String" resultType="egovMap">
+		SELECT ACC_ID
+    	FROM TAB_ACCOUNT 
+    	<where>
+    		<if test='_parameter != null and _parameter !=""'>
+    		ACC_ID = #{_parameter}
+    		</if>
+    	</where>
+	</select>
+	
+	<select id="find_idpw" parameterType="accVO" resultType="egovMap">
+		SELECT ACC_ID, ACC_PW_NEW
+    	FROM TAB_ACCOUNT 
+    	WHERE ACC_NM = #{accNm} AND ACC_PN_3 = #{accPn3}
+    	
+	</select>
+	
+	<select id="user_login" parameterType="accVO" resultType="egovMap">
+		SELECT ACC_ID, ACC_GRP, ACC_NM, ACC_DEL
+    	FROM TAB_ACCOUNT 
+    	WHERE ACC_ID = #{accId} AND ACC_PW_NEW = #{accPwNew}
+	</select>
+	
+	<select id="Email" parameterType="String" resultType="egovMap">
+		SELECT ACC_EM
+    	FROM TAB_ACCOUNT 
+    	WHERE ACC_EM = #{accEm}
+	</select>
+	
+	<update  id="user_pw" parameterType="accVO">
+		UPDATE TAB_ACCOUNT
+		SET ACC_PW_NEW = #{accPwNew}
+		WHERE ACC_EM = #{accEm}
+	</update>
+</mapper>

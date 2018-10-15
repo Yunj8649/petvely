@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+		<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+		<typeAlias alias="searchVO" type="egovframework.example.sample.service.SampleDefaultVO"/>
+		<typeAlias alias="sampleVO" type="egovframework.example.sample.service.SampleVO"/>
+		<typeAlias alias="accVO" type="egovframework.example.user.service.TAB_ACCOUNT_VO"/>
+		<typeAlias alias="prdVO" type="egovframework.example.product.service.TAB_PROD_VO"/>
+		<typeAlias alias="productMgrVO" type="egovframework.example.product.service.ProductMgrVO"/>
+		<typeAlias alias="noticeVO" type="egovframework.example.notice.service.TAB_NOTICE_VO"/>
+		<typeAlias alias="noticePgingVO" type="egovframework.example.notice.service.Notice_Paging_VO"/>
+		<typeAlias alias="memberMgrVO" type="egovframework.example.memberMgr.service.MemberMgrVO"/>
+		<typeAlias alias="NoticeMgrVO" type="egovframework.example.noticeMgr.service.NoticeMgrVO"/>
+		<typeAlias alias="eventPagingVO" type="egovframework.example.event.service.Event_Paging_VO"/>
+		<typeAlias alias="eventVO" type="egovframework.example.event.service.TAB_EVENT_VO"/>
+		<typeAlias alias="categoryPagingVO" type="egovframework.example.category.service.Category_Paging_VO"/>
+		<typeAlias alias="bannerMgrVO" type="egovframework.example.bannerMgr.service.BannerMgrVO"/>
+		<typeAlias alias="qaMgrVO" type="egovframework.example.qaMgr.service.TAB_QA_VO"/>
+		<typeAlias alias="cartVO" type="egovframework.example.cart.service.TAB_CART_VO"/>
+		<typeAlias alias="orderVO" type="egovframework.example.order.service.TAB_ORDER_VO"/>
+   </typeAliases>
+</configuration>

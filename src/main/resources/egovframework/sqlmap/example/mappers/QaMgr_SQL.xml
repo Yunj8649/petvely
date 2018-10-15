@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.qaMgr.service.impl.QaMgrMapper">
+	<select id="selectEventMgrList" resultType="egovMap">
+		SELECT c.*, d.ACC_NM FROM 
+		    (SELECT b.* 
+		    	FROM (SELECT MAX(QA_SEQ) QA_SEQ, QA_WTR_ID QA_WTR_ID 
+		    			FROM TAB_QA GROUP BY QA_WTR_ID) a, TAB_QA b 
+		    			WHERE a.QA_SEQ = b.QA_SEQ) c, 
+		   	 	TAB_ACCOUNT d
+		WHERE c.qa_wtr_id = d.ACC_ID
+			AND c.QA_DEL = 'N'
+	</select>
+	
+	<select id="selectPagingListCnt" resultType="egovMap">
+		SELECT count(*) totalTotCnt
+			, CEIL(count(*) / #{rows}) totalPage
+		FROM (SELECT c.*, d.ACC_NM FROM 
+			    (SELECT b.* 
+		    	FROM (SELECT MAX(QA_SEQ) QA_SEQ, QA_WTR_ID QA_WTR_ID 
+		    			FROM TAB_QA GROUP BY QA_WTR_ID) a, TAB_QA b 
+		    			WHERE a.QA_SEQ = b.QA_SEQ) c, 
+		   	 	TAB_ACCOUNT d
+				WHERE c.qa_wtr_id = d.ACC_ID
+					AND c.QA_DEL = 'N')
+	</select>
+	
+	<select id="selectUserChatList" resultType="egovMap">
+		SELECT 	a.QA_SEQ,
+				a.QA_WTR_ID, 
+				b.QA_WTR_NM, 
+				a.QA_CTT, 
+				a.QA_STT, 
+				a.QA_CRT_DATE
+		FROM TAB_QA a, 
+			(SELECT ACC_NM QA_WTR_NM FROM TAB_ACCOUNT WHERE ACC_ID = #{_parameter}) b
+		WHERE QA_DEL = 'N'
+			AND QA_WTR_ID = #{_parameter}
+		ORDER BY a.QA_SEQ
+	</select>
+	
+	<insert id="insertMsgtoUser" parameterType="qaMgrVO">
+		INSERT INTO TAB_QA (
+			QA_SEQ, 
+			QA_CTT, 
+			QA_WTR_ID, 
+			QA_STT)
+		VALUES (
+			QA_SEQ.nextval,
+			#{qaCtt}, 
+			#{qaWtrId}, 
+			#{qaStt})
+	</insert>
+</mapper>

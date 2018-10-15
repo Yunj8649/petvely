@@ -1,0 +1,248 @@
+@CHARSET "UTF-8";
+/* 움직이는 장바구니 영역 */
+/* 전체 영역 */
+.wing_cart{
+	width:150px;
+	position:absolute;
+	right:50px;
+	top:350px;
+	z-index:10;
+	border:solid #555555 1px;
+	font-size:12px;
+	padding:0px;
+}
+
+.wing_cart h4{
+	margin:0px;
+	font-size:14px;
+	text-align:center;
+	color:#ffffff;
+	padding-top:3px;
+	padding-bottom:3px;
+}
+
+.wing_cart div a img{
+	width:100%;
+}
+
+/* 장바구니 영역 */
+.wing_cart .wing_cart_title{
+	border:solid #e5e5e5 1px;
+	background-color:#222222;
+}
+
+.wing_cart .wing_cart_img{
+	width:130px;
+	margin-left:10px;
+	margin-right:10px;
+	display:none;
+	background-color:#ffffff;
+}
+
+/* 찜한 상품 영역 */
+.wing_cart .wing_focus_title{
+	border:solid #e5e5e5 1px;
+	background-color:#222222;
+}
+
+.wing_cart .wing_focus_img{
+	width:130px;
+	margin-left:10px;
+	margin-right:10px;
+	display:none;
+	background-color:#ffffff;
+}
+
+/* 최근 본 상품 영역 */
+.wing_cart .wing_history_title{
+	border:solid #e5e5e5 1px;
+	background-color:#222222;
+}
+
+.wing_cart .wing_history_img{
+	width:130px;
+	margin-left:10px;
+	margin-right:10px;
+	display:block;
+	background-color:#ffffff;
+}
+
+/* 배송정보 */
+
+#point_deli, 
+#point_deli tr,
+#point_deli td,
+#point_deli th
+{
+	 border: none;
+	 cellpadding: 0;
+	 cellspacing: 0;
+	 font-family:고딕;
+	 text-align: left;
+	 
+}
+
+#point_deli {
+	width:60%;
+}	
+
+/* 2017.11.27 : 김효진 : 구매완료페이지 */
+/* 2017.12.09 : 김효진 : 구매페이지 */
+
+#purchase_complete div {
+	background-color: white;
+}
+
+#purchase_complete .logo {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	text-align: center;
+}
+
+#purchase_complete .logo img {
+	width: 40%;
+}
+
+#purchase_complete .complete_text {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+#purchase_complete .complete_text h1 {
+	font-family: initial;
+	font-size: 50px;
+	color: #000000;
+}
+
+#purchase_complete .detail_complete {
+	display: none;
+	padding: 20px;
+}
+
+#purchase_complete .detail_complete h4 {
+	font-family: initial;
+	font-size: 20px;
+	color: #000000;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+#purchase_complete .complete_btn {
+	text-align: center;
+	padding: 20px;
+}
+
+.detail_complete table thead tr {
+	border-top: solid 3px;
+	width: 100%;
+	background-color: #d2d2d2;
+}
+
+.detail_complete table thead tr .th_one, 
+.detail_complete table tbody tr .tb_one {
+	max-width: 200px;
+	min-width: 100px;
+}
+
+.detail_complete table thead tr td {
+	text-align: center;
+	font-size: 20px;
+	font-weight: bold;
+	border: solid 1px;
+	max-width: 24%;
+}
+
+.detail_complete table tbody tr td {
+	border: solid 1px;
+}
+
+.detail_complete table tbody tr #prd_img{ 
+	width: 15%;
+}
+
+.detail_complete table tbody tr #prd_name{ 
+	width: 70%;
+}
+
+#order_complete {
+	text-align: right;
+	margin-bottom: 20px;
+}
+
+/* 2017.11.29 : 김효진 : 카테고리 페이지 */
+/* 상품명 길이에 따른 높이가 변경되어 깨지는 현상 때문에 높이 18px로 고정 */
+/* 상품명 길이가 길때 ...줄임표 사용 */
+.grid-mode .product-title .title-5 {
+	overflow: hidden; 
+	text-overflow: ellipsis;
+	white-space: nowrap; 
+	width: 196px;
+	height: 18px;
+	max-height: 18px;
+}
+
+/* 2017.12.02 : 김효진 */
+/* 상세페이지 상품 설명에 이미지 삽입시 넓이 800px로 고정하기 */
+/* 설명부분 글씨 크기 및 두껍게 */
+#collapse_des .panel-body img, 
+#collapse_des .panel-body p {
+	width: 100%;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+/* 2018.01.01 : 김효진 */
+/* 회원 가입 ID 중복체크 버튼 */
+#div_id {
+	height: 87px;
+}
+
+#account_check {
+	position: relative;
+	top: -62px;
+	right: -510px;
+	width: 100px;
+}
+
+/* 2018.03.25 : 이윤정 */
+/* email 버튼 */
+#div_email {
+	height: 87px;
+}
+
+#email_check {
+	position: relative;
+	top: -62px;
+	right: -510px;
+	width: 100px;
+}
+
+/*email 인증번호 확인칸*/
+#emailDiv {
+	height: 87px;
+}
+
+#valueChk {
+	position: relative;
+	top: -62px;
+	right: -510px;
+	width: 100px;
+}
+
+/* 2017.01.08 : 김효진 */
+/* input number tag 증감 화살표 삭제 */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* login 창*/
+/* id, pw*/
+
+.loginid {
+	height: 87px;
+}

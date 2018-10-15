@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.search.service.impl.SearchMapper">
+
+	
+		<select id="selectList" parameterType="egovframework.example.search.service.SearchPageVO" resultType="egovMap">
+		SELECT aa.*
+		FROM 
+			(SELECT a.*, FLOOR((ROWNUM - 1)/ #{rows} + 1 ) pageNumber
+			FROM
+				(SELECT 
+					PR_CD, 
+					PR_NM, 
+					BRD_NM, 
+					CT_CD, 
+					SUB_CT_CD, 
+					PR_PRC, 
+					PR_IMG_1, 
+					PR_DES_2 	
+				FROM 
+					TAB_PROD
+				WHERE 1=1
+					<if test="keyword != null and keyword != ''">
+						AND PR_NM like '%'||#{keyword}||'%'
+					</if>
+				) a
+			) aa
+		WHERE aa.pageNumber = #{page} 
+	</select>
+	
+	
+	
+	<select id="selectListCnt" resultType="int" parameterType="String">
+		SELECT COUNT(*)
+		FROM  tab_prod
+		WHERE 1=1
+		<if test = " _parameter != null and _parameter != '' ">
+			AND PR_NM like '%'||#{_parameter}||'%'
+		</if>	
+	</select>
+
+ 
+</mapper>

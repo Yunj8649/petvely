@@ -1,0 +1,61 @@
+@CHARSET "UTF-8";
+/* 
+	@김병직 171207 고객센터용 css
+ */
+#faqs-body, #onehelp-body {
+	padding-top: 50px;
+	padding-bottom: 75px;
+}
+
+#onehelp-board .board-num {
+	width: 5%;
+}
+
+#onehelp-board .board-title {
+	width: 55%;
+}
+
+#onehelp-board .board-aut {
+	width: 15%;
+}
+
+#onehelp-board .board-date {
+	width: 15%;
+}
+
+#onehelp-board .board-hit {
+	width: 10%;
+}
+
+.help-board-write {
+	padding-left: 100px;
+	padding-right: 100px;
+}
+
+.help-board-passwd {
+	width: 30%;
+}
+
+/* main.jsp 공백삽입 div */
+.main-empty {
+	padding-bottom: 25px;
+	background-color: rgb(245, 245, 245);
+}
+
+.home_banner_content.main-banner-long {
+	padding-bottom: 10px;
+}
+
+.help-board-article {
+	text-align: left;
+}
+
+td#help-board.view_text {
+	text-align: left;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 100px;
+}
+
+//////////////////////////

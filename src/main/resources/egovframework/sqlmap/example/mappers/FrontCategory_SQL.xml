@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.category.service.impl.CategoryMapper">
+	
+	<select id="getFrntPrdList" parameterType="categoryPagingVO" resultType="egovMap">
+		SELECT aa.*
+		FROM 
+			(SELECT a.*, FLOOR((ROWNUM - 1)/ #{rows} + 1 ) pageNumber
+			FROM
+				(SELECT 
+					PR_CD, 
+					PR_NM, 
+					BRD_NM, 
+					CT_CD, 
+					SUB_CT_CD, 
+					PR_PRC, 
+					PR_IMG_1, 
+					PR_DES_2 	
+				FROM 
+					TAB_PROD
+				WHERE 
+					CT_CD = #{ctCd} AND SUB_CT_CD = #{subCtCd}
+				ORDER BY PR_CRT_DATE DESC) a
+			) aa
+		WHERE aa.pageNumber = #{page} 
+	</select>
+	
+	<select id="getCtrName" resultType="egovMap" parameterType="String">
+		SELECT COUNT(*) CNT
+			  ,TC.CT_NM			CT_NM
+			  ,TC.SUB_CT_NM		SUB_CT_NM
+		FROM  TAB_CATEGORY TC, TAB_PROD TP
+		WHERE 1=1 
+          AND TC.CT_CD = #{param1}
+          AND TC.SUB_CT_CD = #{param2}
+          AND TC.CT_CD = TP.CT_CD
+          AND TC.SUB_CT_CD = TP.SUB_CT_CD
+        GROUP BY TC.SUB_CT_NM, TC.CT_NM
+	</select>
+	
+	<select id="selectPagingListCnt" parameterType="categoryPagingVO" resultType="egovMap">
+		SELECT count(*) TOTAL_TOT_CNT, CEIL(count(*)/#{rows}) TOTAL_PAGE
+		FROM TAB_PROD
+		WHERE CT_CD = #{ctCd} AND SUB_CT_CD = #{subCtCd}
+	</select>
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.cart.service.impl.CartMapper">
+  
+<!-- 	<select id="selectProductList" resultType="prdVO"> -->
+<!-- 		SELECT tc.* -->
+<!-- 		FROM TAB_CART tc, TAB_PROD tp -->
+<!-- 		WHERE tc.PR_CD = tp.PR_CD and  -->
+<!-- 			  tc.PR_CD = #{prCd} -->
+<!-- 	</select> -->
+	
+	 <insert id="insertCart" parameterType="cartVO">
+        INSERT INTO TAB_CART(
+            PR_CD, CR_CD, ACC_ID, CR_QTY, CR_OPT, CR_CLR
+        ) VALUES (
+           #{prCd},CART_SEQ.NEXTVAL,#{accId},#{crQty},#{crOpt},#{crClr}
+        )
+    </insert>
+    
+    <!-- 2. 장바구니 목록 -->
+    <select id="listCart" resultType="egovMap">
+        SELECT
+            c.CR_CD ,
+            c.ACC_ID,
+            m.ACC_NM, 
+            c.PR_CD,
+            p.PR_NM, 
+            c.CR_QTY, 
+            p.PR_PRC,
+            p.BRD_NM,
+            p.PR_IMG_1,
+            (p.PR_PRC *  c.CR_QTY) money
+        FROM
+            TAB_ACCOUNT m, TAB_PROD p, TAB_CART c
+        WHERE m.ACC_ID = c.ACC_ID
+            AND p.PR_CD = c.PR_CD
+            AND c.ACC_ID = #{accId}
+        ORDER BY
+            c.CR_CD
+    </select>
+    
+    <!-- 3. 장바구니 전체 금액 -->
+    <select id="sumCart" resultType="int">
+        SELECT NVL(SUM(p.PR_PRC * c.CR_QTY), 0) money
+        FROM TAB_CART c, TAB_PROD p
+        WHERE c.PR_CD = p.PR_CD AND c.ACC_ID = #{accId}
+    </select>
+    
+    <!-- 4. 장바구니 수정 -->
+    <update id="modifyCart">
+        UPDATE TAB_CART    
+        SET CR_QTY = #{crQty} 
+        WHERE ACC_ID= #{accId} 
+        AND PR_CD = #{prCd}
+        AND CR_CD = #{crCd}
+    </update>
+    
+    <!-- 5. 장바구니 삭제 -->
+    <delete id="deleteCart">
+        DELETE FROM TAB_CART 
+        WHERE CR_CD = #{crCd}
+    </delete>
+    <!-- 6. 장바구니에 동일한 상품 레코드 확인 -->
+    <select id="selectOne" resultType="int">
+        SELECT COUNT(*)
+        FROM TAB_CART
+        WHERE ACC_ID= #{accId} 
+        AND PR_CD = #{prCd}
+    </select>
+    
+    <!-- 7. 장바구니에 동일한 상품이 존재하면 수정 -->
+    <update id="updateCart">
+        UPDATE TAB_CART 
+        SET CR_QTY = CR_QTY + #{crQty} 
+        WHERE ACC_ID= #{accId} 
+        AND PR_CD = #{prCd}
+    </update>
+</mapper>

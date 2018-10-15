@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.noticeMgr.service.impl.NoticeMgrMapper">
+	
+	<select id="selectNoticeList" parameterType="noticeMgrVO" resultType="egovMap">	
+		SELECT b.*
+			FROM (
+				SELECT 	a.*, 
+					  	ROWNUM rnum, 
+						FLOOR((ROWNUM - 1) / #{rows} + 1) pageNumber
+				FROM (
+					SELECT
+						N.NT_SEQ,
+						N.NT_TTL,
+						N.NT_WTR_ID,
+						N.NT_CRT_DATE,
+						N.NT_HIT
+					FROM TAB_NOTICE N
+					WHERE NT_DEL = 'N'
+					ORDER BY NT_SEQ DESC
+				) a
+			)b
+		WHERE b.pageNumber = #{page}
+		ORDER BY NT_SEQ DESC
+	</select>
+	
+	<select id="selectNoticeListCnt" parameterType="noticeMgrVO" resultType="egovMap">
+		SELECT count(*) totalTotCnt
+			, CEIL(count(*) / #{rows}) totalPage
+		FROM TAB_NOTICE
+	</select>
+	
+	<select id="noticeDetailList" parameterType="noticeVO" resultType="egovMap">
+		SELECT * FROM TAB_NOTICE
+		WHERE
+		<if test='ntSeq != null and ntSeq != ""'>
+			NT_SEQ = #{ntSeq}
+		</if>
+	</select>
+	
+	<update id="fnDelNoticeMgr" parameterType="map">
+		UPDATE	TAB_NOTICE
+		SET		NT_DEL = 'Y'
+		WHERE	NT_SEQ = #{ntSeq}
+	</update>
+	
+	<select id="getSelSeqNoData" parameterType="String"
+		resultType="egovMap">
+	SELECT	*
+	FROM	TAB_NOTICE
+	WHERE	NT_SEQ = #{_parameter}	
+	</select>
+	
+	<update id="modifyNoticeDetail" parameterType="map">
+		UPDATE	TAB_NOTICE
+		SET		NT_TTL = #{ntTtl},
+				NT_CTT = #{ntCtt}
+		WHERE	NT_SEQ = #{ntSeq}		
+	</update>
+</mapper>
